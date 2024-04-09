@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-function QuestionForm(props) {
+function QuestionForm({questions,setQuestions, dbUrl}) {
   const [formData, setFormData] = useState({
     prompt: "",
     answer1: "",
@@ -19,7 +19,24 @@ function QuestionForm(props) {
 
   function handleSubmit(event) {
     event.preventDefault();
-    console.log(formData);
+    
+
+    const newQuestion = {
+      "id": questions.length + 1,
+      "prompt": formData.prompt,
+      "answers": [formData.answer1,formData.answer2,formData.answer3,formData.answer4],
+      "correctIndex": formData.correctIndex
+    }
+    
+    fetch(dbUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(newQuestion)
+    })
+    
+    setQuestions([...questions, newQuestion])
   }
 
   return (
